@@ -1,5 +1,6 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask_restful import Api
 
 # Define the WSGI application object.
 app = Flask(__name__)
@@ -12,3 +13,11 @@ db = SQLAlchemy(app)
 
 # Import all models here for easier importing.
 from app.users.models import User
+from app.users.resources import UserListResource, UserResource
+
+api = Api(app)
+
+
+api.add_resource(UserListResource, '/users')
+api.add_resource(UserResource, '/users/<int:user_id>')
+
