@@ -19,4 +19,4 @@ api = Api(app)
 
 # All resources that need to be routed should be routed here.
 api.add_resource(UserListResource, '/users', '/users/')
-api.add_resource(UserResource, '/users/<int:user_id>', '/users/<int:user_id>/')
+api.add_resource(UserResource, '/users/<int:userId>', '/users/<int:userId>/')
