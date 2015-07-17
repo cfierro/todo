@@ -13,6 +13,7 @@ db = SQLAlchemy(app)
 
 # Import all models here for easier importing.
 from app.users.models import User
+from app.todo_lists.models import TodoList
 from app.users.resources import UserListResource, UserResource
 
 api = Api(app)
@@ -20,3 +21,5 @@ api = Api(app)
 # All resources that need to be routed should be routed here.
 api.add_resource(UserListResource, '/users', '/users/')
 api.add_resource(UserResource, '/users/<int:userId>', '/users/<int:userId>/')
+
+db.create_all()
