@@ -14,6 +14,7 @@ db = SQLAlchemy(app)
 # Import all models here for easier importing.
 from app.users.models import User
 from app.todo_lists.models import TodoList
+from app.todos.models import Todo
 from app.users.resources import UserListResource, UserResource
 
 api = Api(app)
