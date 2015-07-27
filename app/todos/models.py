@@ -1,8 +1,9 @@
 from app import db
 
+from app.lib.models import Base
 
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+
+class Todo(Base):
     subject = db.Column(db.String)
     todoListId = db.Column(db.Integer, db.ForeignKey('todo_list.id'))
     dueDate = db.Column(db.DateTime)

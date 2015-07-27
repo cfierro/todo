@@ -1,7 +1,9 @@
 from app import db
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+from app.lib.models import Base
+
+
+class User(Base):
     name = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
