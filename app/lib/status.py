@@ -5,7 +5,7 @@ class TodoException(Exception):
     statusCode = 500
 
     def __init__(self, message, details=None, result=None, info=None):
-        super(BaseException, self).__init__()
+        super(TodoException, self).__init__()
         self.statusMsg = message
         self.statusDetails = details or {}
         self.result = result or {}
