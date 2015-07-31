@@ -1,10 +1,11 @@
 import json
 
 from flask import request
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 
 from app import db, User
 from app.lib.response_util import buildOkResponse
+from app.lib import status
 
 
 def _returnUser(user):
@@ -32,9 +33,9 @@ class UserListResource(Resource):
     def post(self):
         """This method adds a new user and returns the user in an OK response.
         """
-        newUserData = json.loads(request.form['data'])  # this is a dictionary
-        newUser = User(newUserData['name'], newUserData['email'],
-                       newUserData['password'])
+        newUser = User(request.form.get('name'),
+                       request.form.get('email'),
+                       request.form.get('password'))
         db.session.add(newUser)
         db.session.commit()
 
@@ -52,10 +53,9 @@ class UserResource(Resource):
             userId - An integer, primary key that identifies the user.
         """
         user = User.query.get(userId)
-        userData = json.loads(request.form['data'])
 
-        user.name = userData.get('name') or user.name
-        user.password = userData.get('password') or user.password
+        user.name = request.form.get('name') or user.name
+        user.password = request.form.get('password') or user.password
 
         db.session.commit()
 
