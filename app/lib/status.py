@@ -21,3 +21,11 @@ class TodoException(Exception):
                 'statusDetails': self.statusDetails,
             },
         }
+
+class BadRequest(TodoException):
+    """Excpetion with 400 statusCode
+    """
+    statusCode = 400
+    def __init__(self, message, details=None, result=None, info=None):
+        super(BadRequest, self).__init__(message, details=None,
+            result=None, info=None)

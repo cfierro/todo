@@ -33,6 +33,10 @@ class UserListResource(Resource):
     def post(self):
         """This method adds a new user and returns the user in an OK response.
         """
+        if not('name' in request.form and 'email' in request.form and
+            'password' in request.form):
+            raise status.BadRequest('You need all three arguments: name, email, password')
+
         newUser = User(request.form.get('name'),
                        request.form.get('email'),
                        request.form.get('password'))

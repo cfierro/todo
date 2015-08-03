@@ -1,8 +1,11 @@
-from app import db
-from app.lib.models import Base
+from app import db, Base
+from app.lib.models import TableMixin
 
 
-class User(Base):
+class User(TableMixin, Base):
+
+    __tablename__ = 'user'
+
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)

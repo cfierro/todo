@@ -1,8 +1,9 @@
 from app import db
 
 
-class Base(db.Model):
-
+class TableMixin(db.Model):
+    """Base class that all models should inherit from.
+    """
     __abstract__ = True
 
     id = db.Column(db.Integer, primary_key=True)

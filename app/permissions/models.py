@@ -1,11 +1,14 @@
-from app import db
+from app import db, Base
 
-from app.lib.models import Base
+from app.lib.models import TableMixin
 
 
-class TodoListPermission(Base):
+class TodoListPermission(TableMixin, Base):
+
+    __tablename__ = 'todo_list_permission'
+
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))
-    todoListId = db.Column(db.Integer, db.ForeignKey('todoList.id'))
+    todoListId = db.Column(db.Integer, db.ForeignKey('todo_list.id'))
 
     def __init__(self, userId, todoListId):
         self.userId = userId

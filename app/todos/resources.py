@@ -21,7 +21,7 @@ def _returnTodo(todo):
         }
 
 
-class todoMultiResource(Resource):
+class TodoMultiResource(Resource):
     """Class for creating and accessing todos.
     """
     def get(self):  # Should this take a user and return their todos?
@@ -46,7 +46,7 @@ class todoMultiResource(Resource):
         return buildOkResponse(_returnTodo(newTodo))
 
 
-class todoResource(Resource):
+class TodoResource(Resource):
     """Class for updating, delelting, getting single todo.
     """
     def put(self, todoId):

@@ -1,9 +1,12 @@
-from app import db
+from app import db, Base
 
-from app.lib.models import Base
+from app.lib.models import TableMixin
 
 
-class Todo(Base):
+class Todo(TableMixin, Base):
+
+    __tablename__ = 'todo'
+
     subject = db.Column(db.String)
     todoListId = db.Column(db.Integer, db.ForeignKey('todo_list.id'))
     dueDate = db.Column(db.DateTime)
