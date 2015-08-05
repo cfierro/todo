@@ -1,23 +1,11 @@
 import json
 
 from flask import request
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 
 from app import db, User
-from app.lib.response_util import buildOkResponse
+from app.lib.response_util import buildOkResponse, _returnUser
 from app.lib import status
-
-
-def _returnUser(user):
-    """Private method to convert a user model into a dictionary.
-
-    Args:
-        user - A user model.
-    """
-    return {
-        "id": user.id,
-        "name": user.name
-    }
 
 
 class UserListResource(Resource):

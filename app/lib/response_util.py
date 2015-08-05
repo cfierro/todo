@@ -1,3 +1,16 @@
+def _returnUser(user):
+    """Private method to convert a user model into a dictionary.
+
+    Args:
+        user - A user model.
+    """
+    return {
+        'id': user.id,
+        'name': user.name,
+        'email': user.email
+    }
+
+
 def buildResponse(result, info, statusMsg, statusDetails,
                   statusCode):
     """Function creates and returns a standard HTTP response.

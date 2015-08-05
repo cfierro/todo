@@ -13,6 +13,7 @@ app.config.from_object('config')
 # Setup error handlers.
 from app.lib.status import TodoException
 
+
 @app.errorhandler(TodoException)
 def handleBaseException(error):
     response = jsonify(error.toDict())
@@ -28,7 +29,6 @@ db = SQLAlchemy(app)
 from app.users.models import User
 from app.todo_lists.models import TodoList
 from app.todos.models import Todo
-from app.users.resources import UserListResource, UserResource
 
 db.create_all()
 
@@ -38,5 +38,11 @@ db.create_all()
 api = Api(app)
 
 # All resources that need to be routed should be routed here.
+from app.users.resources import UserListResource, UserResource
+from app.authentication.resources import UserLogin, UserLogOut, UserInfo
+
 api.add_resource(UserListResource, '/users', '/users/')
 api.add_resource(UserResource, '/users/<int:userId>', '/users/<int:userId>/')
+api.add_resource(UserLogin, '/login/<int:userId>', '/login/<int:userId>/')
+api.add_resource(UserLogOut, '/logout', '/logout/')
+api.add_resource(UserInfo, '/me', '/me/')
