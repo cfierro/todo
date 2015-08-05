@@ -1,3 +1,16 @@
+def _returnUser(user):
+    """Private method to convert a user model into a dictionary.
+
+    Args:
+        user - A user model.
+    """
+    return {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email
+    }
+
+
 def buildResponse(result, info, statusMsg, statusDetails,
                   statusCode):
     """Function creates and returns a standard HTTP response.
@@ -20,7 +33,7 @@ def buildResponse(result, info, statusMsg, statusDetails,
     }
 
 
-def buildOkResponse(result, info=None, statusMsg='Ok', statusDetails={},
+def buildOkResponse(result, info=None, statusMsg='Ok', statusDetails=None,
                     statusCode='HTTPOK'):
     """Function creates a successful HTTP response.
 
@@ -31,11 +44,15 @@ def buildOkResponse(result, info=None, statusMsg='Ok', statusDetails={},
         statusDetails - String with extra status details.
         statusCode - String with status code.
     """
+
+    info = info or {}
+    statusDetails = statusDetails or {}
+
     return buildResponse(result,info, statusMsg, statusDetails, statusCode)
 
 
 def buildErrorResponse(result, info=None, statusMsg='buildErrorResponse',
-                       statusDetails={}, statusCode='HTTPError'):
+                       statusDetails=None, statusCode='HTTPError'):
     """Function creates a unsuccessful HTTP response.
 
     Args:
@@ -45,4 +62,7 @@ def buildErrorResponse(result, info=None, statusMsg='buildErrorResponse',
         statusDetails - String with extra status details.
         statusCode - String with status code.
     """
-    return buildResponse(result,info, statusMsg, statusDetails, statusCode)
+    info = info or {}
+    statusDetails = statusDetails or {}
+
+    return buildResponse(result, info, statusMsg, statusDetails, statusCode)
