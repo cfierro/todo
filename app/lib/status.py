@@ -28,5 +28,6 @@ class Unauthorized(TodoException):
     """
     statusCode = 401
 
-    def __init__(self, message="Unauthorized request.", details=None, result=None, info=None):
+    def __init__(self, message="Unauthorized request.", details=None,
+                 result=None, info=None):
         super(Unauthorized, self).__init__(message, details=None, result=None, info=None)

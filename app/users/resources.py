@@ -16,7 +16,7 @@ class UserListResource(Resource):
         an OK response.
         """
         users = User.query.all()
-        return response_util.buildOkResponse([user._returnUser() for user in users])
+        return response_util.buildOkResponse([user.toDict() for user in users])
 
     def post(self):
         """This method adds a new user and returns the user in an OK response.
@@ -27,7 +27,7 @@ class UserListResource(Resource):
         db.session.add(newUser)
         db.session.commit()
 
-        return response_util.buildOkResponse(newUser._returnUser())
+        return response_util.buildOkResponse(newUser.toDict())
 
 
 class UserResource(Resource):
@@ -47,7 +47,7 @@ class UserResource(Resource):
 
         db.session.commit()
 
-        return response_util.buildOkResponse(user._returnUser())
+        return response_util.buildOkResponse(user.toDict())
 
     def get(self, userId):
         """This method gets a single user and returns the user in an OK response.
@@ -56,7 +56,7 @@ class UserResource(Resource):
             userId - An integer, primary key that identifies the user.
         """
         user = User.query.get(userId)
-        return response_util.buildOkResponse(user._returnUser())
+        return response_util.buildOkResponse(user.toDict())
 
     def delete(self, userId):
         """This method deletes a user and returns result none.

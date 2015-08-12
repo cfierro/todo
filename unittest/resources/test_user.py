@@ -34,6 +34,7 @@ class TestUser_get(TestUser):
             },
             'result': {
                 'id': 1,
-                'name': 'Test User'
+                'name': 'Test User',
+                'email': 'test@test.com'
             }
         }

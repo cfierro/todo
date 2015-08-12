@@ -12,7 +12,7 @@ class User(db.Model):
         self.email = email
         self.password = password
 
-    def _returnUser(self):
+    def toDict(self):
         """Private method to convert a user model into a dictionary.
 
         Args:

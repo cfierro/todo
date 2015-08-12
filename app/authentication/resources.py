@@ -1,18 +1,9 @@
 from flask import session
 from flask_restful import Resource
-from functools import wraps
+
 
 from app.users.models import User
-from app.lib import response_util, status
-
-
-def requires_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if 'userId' not in session:
-            raise status.Unauthorized()
-        return f(*args, **kwargs)
-    return decorated
+from app.lib import authentication, response_util
 
 
 class UserLogin(Resource):
@@ -24,7 +15,7 @@ class UserLogin(Resource):
         user = User.query.get(userId)
         session['userId'] = user.id
 
-        return response_util.buildOkResponse(user._returnUser())
+        return response_util.buildOkResponse(user.toDict())
 
     def post(self, userId):
         """Method to post a user id and create a new session.
@@ -46,10 +37,10 @@ class UserLogOut(Resource):
 class UserInfo(Resource):
     """Class for accessing logged in user information.
     """
-    @requires_auth
+    @authentication.requiresAuth
     def get(self):
         """Method to get the user information of the user logged in.
         """
         userId = session['userId']
         user = User.query.get(userId)
-        return response_util.buildOkResponse(user._returnUser())
+        return response_util.buildOkResponse(user.toDict())
