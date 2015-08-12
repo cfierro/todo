@@ -38,11 +38,14 @@ db.create_all()
 api = Api(app)
 
 # All resources that need to be routed should be routed here.
-from app.users.resources import UserListResource, UserResource
-from app.authentication.resources import UserLogin, UserLogOut, UserInfo
 
+# Users API
+from app.users.resources import UserListResource, UserResource
 api.add_resource(UserListResource, '/users', '/users/')
 api.add_resource(UserResource, '/users/<int:userId>', '/users/<int:userId>/')
+
+# Authentication API
+from app.authentication.resources import UserLogin, UserLogOut, UserInfo
 api.add_resource(UserLogin, '/login/<int:userId>', '/login/<int:userId>/')
 api.add_resource(UserLogOut, '/logout', '/logout/')
 api.add_resource(UserInfo, '/me', '/me/')

@@ -1,14 +1,14 @@
-def _returnUser(user):
-    """Private method to convert a user model into a dictionary.
+# def _returnUser(user):
+#     """Private method to convert a user model into a dictionary.
 
-    Args:
-        user - A user model.
-    """
-    return {
-        'id': user.id,
-        'name': user.name,
-        'email': user.email
-    }
+#     Args:
+#         user - A user model.
+#     """
+#     return {
+#         'id': user.id,
+#         'name': user.name,
+#         'email': user.email
+#     }
 
 
 def buildResponse(result, info, statusMsg, statusDetails,
@@ -58,4 +58,4 @@ def buildErrorResponse(result, info=None, statusMsg='buildErrorResponse',
         statusDetails - String with extra status details.
         statusCode - String with status code.
     """
-    return buildResponse(result,info, statusMsg, statusDetails, statusCode)
+    return buildResponse(result, info, statusMsg, statusDetails, statusCode)

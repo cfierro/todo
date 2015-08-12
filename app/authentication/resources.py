@@ -1,20 +1,34 @@
 from flask import session
 from flask_restful import Resource
+from functools import wraps
 
 from app.users.models import User
-from app.lib.response_util import buildOkResponse, _returnUser
+from app.lib import response_util, status
+
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'userId' not in session:
+            raise status.Unauthorized()
+        return f(*args, **kwargs)
+    return decorated
 
 
 class UserLogin(Resource):
     """Class for logging in a user.
     """
     def get(self, userId):
+        """Method to get a user id and create a new session.
+        """
         user = User.query.get(userId)
-        session['id'] = user.id
+        session['userId'] = user.id
 
-        return buildOkResponse(_returnUser(user))
+        return response_util.buildOkResponse(user._returnUser())
 
     def post(self, userId):
+        """Method to post a user id and create a new session.
+        """
         return self.get(userId)
 
 
@@ -22,19 +36,20 @@ class UserLogOut(Resource):
     """Class for logging out a user.
     """
     def get(self):
-        session.pop('id', None)
+        """Method to get a user id and end the user's session.
+        """
+        session.pop('userId', None)
 
-        return buildOkResponse(None)
+        return response_util.buildOkResponse(None)
 
 
 class UserInfo(Resource):
     """Class for accessing logged in user information.
     """
+    @requires_auth
     def get(self):
-
-        if 'id' in session:
-            userId = session['id']
-            user = User.query.get(userId)
-            return buildOkResponse(_returnUser(user))
-        else:
-            return buildOkResponse(None)
+        """Method to get the user information of the user logged in.
+        """
+        userId = session['userId']
+        user = User.query.get(userId)
+        return response_util.buildOkResponse(user._returnUser())
