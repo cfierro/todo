@@ -18,7 +18,7 @@ class TestUser_get(TestUser):
     """Test cases for the get API endpoint.
     """
     def test_get_success(self):
-        """Test user is successfully returned.
+        """Verify user is successfully returned.
         """
         user = User('Test User', 'test@test.com', 'password')
         db.session.add(user)
@@ -41,7 +41,7 @@ class TestUser_get(TestUser):
         }
 
     def test_get_notFound(self):
-        """Verify NotFound is raised when userId does not exist
+        """Verify NotFound is raised when user with the given ID does not exist.
         """
         resp = self.client.get('/users/1000')
 
@@ -56,8 +56,8 @@ class TestUser_get(TestUser):
             'result': {}
         }
 
-    def test_get_list_success(self):
-        """Test list of users is successfully returned.
+    def test_get_listSuccess(self):
+        """Verify list of users is successfully returned.
         """
         user1 = User('Test1 User', 'test1@test.com', 'password1')
         user2 = User('Test2 User', 'test2@test.com', 'password2')
@@ -74,16 +74,18 @@ class TestUser_get(TestUser):
                 'statusDetails': {},
                 'statusCode': 'HTTPOK'
             },
-            'result': [{
-                'id': 1,
-                'name': 'Test1 User',
-                'email': 'test1@test.com'
+            'result': [
+                {
+                    'id': 1,
+                    'name': 'Test1 User',
+                    'email': 'test1@test.com'
                 },
                 {
-                'id': 2,
-                'name': 'Test2 User',
-                'email': 'test2@test.com'
-                }]
+                    'id': 2,
+                    'name': 'Test2 User',
+                    'email': 'test2@test.com'
+                }
+            ]
         }
 
 
@@ -91,6 +93,8 @@ class TestUser_post(TestUser):
     """Test resources for the API post endpoint.
     """
     def test_post_success(self):
+        """Verify new user is successfully returned.
+        """
         user = {
             'name': 'Test User',
             'email': 'test@test.com',
@@ -115,11 +119,9 @@ class TestUser_post(TestUser):
         }
 
     def test_post_badRequest(self):
-        user = {
-            'name': None,
-            'email': None,
-            'password': None
-        }
+        """Verify BadRequest is raised when user fields are missing.
+        """
+        user = {}
 
         resp = self.client.post('/users/', data=user)
 
@@ -139,16 +141,18 @@ class TestUser_put(TestUser):
     """Test resources for the API put endpoint.
     """
     def test_put_success(self):
+        """Verify updated user is successfully returned.
+        """
         user = User('Test User', 'test@test.com', 'password')
         db.session.add(user)
         db.session.commit()
 
-        new_user_data = {
+        newUserData = {
             'name': 'Updated User',
             'password': 'updatedpass'
         }
 
-        resp = self.client.put('/users/%s' % user.id, data=new_user_data)
+        resp = self.client.put('/users/%s' % user.id, data=newUserData)
 
         assert resp.status_code == 200
         assert json.loads(resp.data) == {
@@ -166,7 +170,7 @@ class TestUser_put(TestUser):
         }
 
     def test_put_notFound(self):
-        """Verify NotFound is raised when userId does not exist
+        """Verify NotFound is raised when user with the given ID does not exist.
         """
         resp = self.client.put('/users/1000')
 
@@ -186,7 +190,7 @@ class TestUser_delete(TestUser):
     """Test resources for the API put endpoint.
     """
     def test_delete_success(self):
-        """Test user is successfully deleted
+        """Verify user is successfully deleted.
         """
         user = User('Test User', 'test@test.com', 'password')
         db.session.add(user)
@@ -206,7 +210,7 @@ class TestUser_delete(TestUser):
         }
 
     def test_delete_notFound(self):
-        """Verify NotFound is raised when userId does not exist
+        """Verify NotFound is raised when user with the given ID does not exist.
         """
         resp = self.client.delete('/users/1000')
 
