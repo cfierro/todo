@@ -45,4 +45,4 @@ def buildErrorResponse(result, info=None, statusMsg='buildErrorResponse',
         statusDetails - String with extra status details.
         statusCode - String with status code.
     """
-    return buildResponse(result,info, statusMsg, statusDetails, statusCode)
+    return buildResponse(result, info, statusMsg, statusDetails, statusCode)

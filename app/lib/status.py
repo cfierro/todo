@@ -21,3 +21,13 @@ class TodoException(Exception):
                 'statusDetails': self.statusDetails,
             },
         }
+
+
+class Unauthorized(TodoException):
+    """Exception where unauthorized request is made.
+    """
+    statusCode = 401
+
+    def __init__(self, message="Unauthorized request.", details=None,
+                 result=None, info=None):
+        super(Unauthorized, self).__init__(message, details=None, result=None, info=None)

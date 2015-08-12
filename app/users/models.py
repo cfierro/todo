@@ -1,5 +1,6 @@
 from app import db
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -10,3 +11,15 @@ class User(db.Model):
         self.name = name
         self.email = email
         self.password = password
+
+    def toDict(self):
+        """Private method to convert a user model into a dictionary.
+
+        Args:
+            user - A user model.
+        """
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email
+        }

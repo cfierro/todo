@@ -1,10 +1,12 @@
 import json
 
+from flask import session
+
 from app import db, User
 from unittest import ResourceTest
 
 
-class TestUser(ResourceTest):
+class TestAuth(ResourceTest):
     """Superclass for helper methods.
     """
     def mySetup(self):
@@ -13,16 +15,17 @@ class TestUser(ResourceTest):
     def myTeardown(self):
         pass
 
-class TestUser_get(TestUser):
+class TestAuth_get(TestAuth):
     """Test cases for the get API endpoint.
     """
-    def test_something(self):
-        """Sample test.
+    def test_login_get_success(self):
+        """Test user is successfully logged in.
         """
         user = User('Test User', 'test@test.com', 'password')
         db.session.add(user)
         db.session.commit()
-        resp = self.client.get('/users/%s' % user.id)
+
+        resp = self.client.get('/login/%s' % user.id)
 
         assert resp.status_code == 200
         assert json.loads(resp.data) == {
