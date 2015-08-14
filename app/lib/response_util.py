@@ -31,7 +31,6 @@ def buildOkResponse(result, info=None, statusMsg='Ok', statusDetails=None,
         statusDetails - String with extra status details.
         statusCode - String with status code.
     """
-
     info = info or {}
     statusDetails = statusDetails or {}
 

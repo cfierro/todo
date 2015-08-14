@@ -1,7 +1,6 @@
 from flask import session
 from flask_restful import Resource
 
-
 from app.users.models import User
 from app.lib import authentication, response_util
 

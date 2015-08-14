@@ -59,7 +59,6 @@ class UserResource(Resource):
         Args:
             userId - An integer, primary key that identifies the user.
         """
-
         user = User.query.get(userId)
 
         if user is None:
