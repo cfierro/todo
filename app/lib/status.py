@@ -43,3 +43,13 @@ class NotFound(TodoException):
                  info=None):
         super(NotFound, self).__init__(message, details=details, result=result,
                                        info=info)
+
+class Unauthorized(TodoException):
+    """Exception where unauthorized request is made.
+    """
+    statusCode = 401
+
+    def __init__(self, message="Unauthorized request.", details=None,
+                 result=None, info=None):
+        super(Unauthorized, self).__init__(message, details=None, result=None, info=None)
+

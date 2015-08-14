@@ -1,11 +1,8 @@
-import json
-
 from flask import request
 from flask_restful import Resource
 
 from app import db, User
-from app.lib.response_util import buildOkResponse, _returnUser
-from app.lib import status
+from app.lib import response_util, status
 
 
 class UserListResource(Resource):
@@ -16,7 +13,7 @@ class UserListResource(Resource):
         an OK response.
         """
         users = User.query.all()
-        return buildOkResponse([_returnUser(user) for user in users])
+        return response_util.buildOkResponse([user.toDict() for user in users])
 
     def post(self):
         """This method adds a new user and returns the user in an OK response.
@@ -31,7 +28,7 @@ class UserListResource(Resource):
         db.session.add(newUser)
         db.session.commit()
 
-        return buildOkResponse(_returnUser(newUser))
+        return response_util.buildOkResponse(newUser.toDict())
 
 
 class UserResource(Resource):
@@ -54,7 +51,7 @@ class UserResource(Resource):
 
         db.session.commit()
 
-        return buildOkResponse(_returnUser(user))
+        return response_util.buildOkResponse(user.toDict())
 
     def get(self, userId):
         """This method gets a single user and returns the user in an OK response.
@@ -64,9 +61,10 @@ class UserResource(Resource):
         """
 
         user = User.query.get(userId)
+
         if user is None:
             raise status.NotFound()
-        return buildOkResponse(_returnUser(user))
+        return response_util.buildOkResponse(user.toDict())
 
     def delete(self, userId):
         """This method deletes a user and returns result none.
@@ -80,4 +78,4 @@ class UserResource(Resource):
         db.session.delete(user)
         db.session.commit()
 
-        return buildOkResponse(None)
+        return response_util.buildOkResponse(None)
