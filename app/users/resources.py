@@ -1,11 +1,8 @@
-import json
-
 from flask import request
 from flask_restful import Resource
 
 from app import db, User
-from app.lib import response_util
-from app.lib import status
+from app.lib import response_util, status
 
 
 class UserListResource(Resource):
@@ -21,6 +18,10 @@ class UserListResource(Resource):
     def post(self):
         """This method adds a new user and returns the user in an OK response.
         """
+        if not (request.form.get('name') and request.form.get('email') and
+                request.form.get('password')):
+            raise status.BadRequest()
+
         newUser = User(request.form.get('name'),
                        request.form.get('email'),
                        request.form.get('password'))
@@ -42,6 +43,9 @@ class UserResource(Resource):
         """
         user = User.query.get(userId)
 
+        if user is None:
+            raise status.NotFound()
+
         user.name = request.form.get('name') or user.name
         user.password = request.form.get('password') or user.password
 
@@ -56,6 +60,9 @@ class UserResource(Resource):
             userId - An integer, primary key that identifies the user.
         """
         user = User.query.get(userId)
+
+        if user is None:
+            raise status.NotFound()
         return response_util.buildOkResponse(user.toDict())
 
     def delete(self, userId):
@@ -65,7 +72,9 @@ class UserResource(Resource):
             userId - An integer, primary key that identifies the user.
         """
         user = User.query.get(userId)
+        if user is None:
+            raise status.NotFound()
         db.session.delete(user)
-        db.commit()
+        db.session.commit()
 
         return response_util.buildOkResponse(None)
