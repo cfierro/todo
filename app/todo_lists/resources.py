@@ -4,16 +4,7 @@ from flask import request
 from flask_restful import Resource
 
 from app import db, TodoList
-from app.lib.response_util import buildOkResponse
-
-
-def _returnTodoList(todoList):
-    """Private method to convert a todoList object into a dictionary.
-    """
-    return {
-        "id": todoList.id,
-        "name": todoList.name
-    }
+from app.lib import response_util, status
 
 
 class TodoListMultiResource(Resource):
@@ -24,48 +15,68 @@ class TodoListMultiResource(Resource):
         """
         todoLists = TodoList.query.all()
 
-        return buildOkResponse([_returnTodoList(todoList) for todoList in
-                               todoLists])
+        return response_util.buildOkResponse([todoList.toDict()
+                                              for todoList in todoLists])
 
     def post(self):
         """Method creates a todoList and returns it in an Ok response.
         """
-        newListData = json.loads(request.form['data'])
-        newList = TodoList(newListData['name'], newListData['userId'])
+        if not(request.form.get('name') and request.form.get('creatorId')):
+            raise status.BadRequest()
 
-        db.session.add(newList)
+        todoList = TodoList(request.form.get('name'),
+                            request.form.get('creatorId'))
+
+        db.session.add(todoList)
         db.session.commit()
 
-        return buildOkResponse(_returnTodoList(newList))
+        return response_util.buildOkResponse(todoList.toDict())
 
 
 class TodoListResource(Resource):
     """Class to get, update, or delete a single todoList.
     """
-    def put(self, listId):
+    def put(self, todoListId):
         """Method that updates and returns a todoList in an Ok response.
+
+        Args:
+            listId - An integer, primary key that identifies the todo list.
         """
-        todoList = TodoList.query.get(listId)
-        todoListData = json.loads(request.form['data'])
+        todoList = TodoList.query.get(todoListId)
 
-        todoList.name = todoListData.get('name') or todoList.name
-        todoList.userId = todoListData.get('userId') or todoList.userId
+        if todoList is None:
+            raise status.NotFound()
 
-        db.session.update()
+        todoList.name = request.form.get('name') or todoList.name
+        todoList.userId = request.form.get('creatorId') or todoList.creatorId
 
-        return buildOkResponse(_returnTodoList(todoList))
+        db.session.commit()
 
-    def get(self, listId):
+        return response_util.buildOkResponse(todoList.toDict())
+
+    def get(self, todoListId):
         """Method that gets and returns a todoList in an Ok response.
-        """
-        todoList = TodoList.query.get(listId)
-        return buildOkResponse(_returnTodoList(todoList))
 
-    def delete(self, listId):
-        """Method that deletes a todoList and returns result None.
+        Args:
+            todoListId - An integer, primary key that identifies the todo list.
         """
-        todoList = TodoList.query.get(listId)
+        todoList = TodoList.query.get(todoListId)
+
+        if todoList is None:
+            raise status.NotFound()
+        return response_util.buildOkResponse(todoList.toDict())
+
+    def delete(self, todoListId):
+        """Method that deletes a todoList and returns result None.
+
+        Args:
+            todoListId - An integer, primary key that identifies the todo list.
+        """
+        todoList = TodoList.query.get(todoListId)
+
+        if todoList is None:
+            raise status.NotFound()
         db.session.delete(todoList)
         db.session.commit()
 
-        return buildOkResponse(None)
+        return response_util.buildOkResponse(None)

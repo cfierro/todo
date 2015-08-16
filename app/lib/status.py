@@ -13,19 +13,44 @@ class TodoException(Exception):
 
     def toDict(self):
         return {
-            'result': self.result,
             'info': self.info,
             'status': {
                 'statusCode': self.statusCode,
                 'statusMsg': self.statusMsg,
-                'statusDetails': self.statusDetails,
+                'statusDetails': self.statusDetails
             },
+            'result': self.result
         }
 
+
 class BadRequest(TodoException):
-    """Excpetion with 400 statusCode
+    """Exception raised when a bad client request is made.
     """
     statusCode = 400
-    def __init__(self, message, details=None, result=None, info=None):
-        super(BadRequest, self).__init__(message, details=None,
-            result=None, info=None)
+
+    def __init__(self, message='Bad request', details=None, result=None,
+                 info=None):
+        super(BadRequest, self).__init__(message, details=details,
+                                         result=result, info=info)
+
+
+class NotFound(TodoException):
+    """Exception raised when a resource does not exist.
+    """
+    statusCode = 404
+
+    def __init__(self, message='Not found', details=None, result=None,
+                 info=None):
+        super(NotFound, self).__init__(message, details=details, result=result,
+                                       info=info)
+
+
+class Unauthorized(TodoException):
+    """Exception where unauthorized request is made.
+    """
+    statusCode = 401
+
+    def __init__(self, message="Unauthorized request", details=None,
+                 result=None, info=None):
+        super(Unauthorized, self).__init__(message, details=None, result=None,
+                                           info=None)

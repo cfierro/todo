@@ -4,7 +4,12 @@ from app.lib.models import TableMixin
 
 
 class TodoListPermission(TableMixin, Base):
+    """Constructor.
 
+    Args:
+        userId - ID of user allowed to view the given todo list.
+        todoListId - ID of todo list being granted access to.
+    """
     __tablename__ = 'todo_list_permission'
 
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))

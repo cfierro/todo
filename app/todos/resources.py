@@ -6,19 +6,7 @@ from flask import request
 from flask_restful import Resource
 
 from app import db, Todo
-from app.lib.response_util import buildOkResponse
-
-
-def _returnTodo(todo):
-    """Private method to convert a todo object into a dictionary.
-
-    Args:
-        todo - A todo model.
-    """
-    return {
-            "id": todo.id,
-            "subject": todo.subject
-        }
+from app.lib import response_util, status
 
 
 class TodoMultiResource(Resource):
@@ -30,20 +18,25 @@ class TodoMultiResource(Resource):
         """
         todos = Todo.query.all()
 
-        return buildOkResponse([_returnTodo(todo) for todo in todos])
+        return response_util.buildOkResponse([todo.toDict() for todo in todos])
 
     def post(self):
         """Method adds a new todo.
         """
-        newTodoData = json.loads(request.form['data'])  # this is a dictionary
-        newTodo = Todo(newTodoData['subject'], newTodoData['todoListId'],
-                       newTodoData['dueDate'], newTodoData['description'],
-                       newTodoData['creatorId'], newTodoData['priority'],
-                       newTodoData['completed'], newTodoData['assigneeId'])
-        db.session.add(newTodo)
+        if not(request.form.get('subject') and request.form.get('todoListId')):
+            raise status.BadRequest()
+
+        todo = Todo(request.form.get('subject'),
+                    request.form.get('todoListId'),
+                    request.form.get('dueDate'),
+                    request.form.get('description'),
+                    request.form.get('priority'),
+                    request.form.get('completed'),
+                    request.form.get('assigneeId'))
+        db.session.add(todo)
         db.session.commit()
 
-        return buildOkResponse(_returnTodo(newTodo))
+        return response_util.buildOkResponse(todo.toDict())
 
 
 class TodoResource(Resource):
@@ -56,30 +49,42 @@ class TodoResource(Resource):
             todoId - Interger, primary key identifying the todo.
         """
         todo = Todo.query.get(todoId)
-        todoData = json.loads(request.form['data'])
 
-        todo.subject = todoData.get('subject') or todo.subject
-        todo.dueDate = todoData.get('dueDate') or todo.dueDate
-        todo.description = todoData.get('description') or todo.description
-        todo.priority = todoData.get('priority') or todo.priority
-        todo.completed = todoData.get('completed') or todo.completed
-        todo.assigneeId = todoData.get('assigneeId') or todo.assigneeId
+        if todo is None:
+            raise status.NotFound()
+
+        todo.subject = request.form.get('subject') or todo.subject
+        todo.dueDate = request.form.get('dueDate') or todo.dueDate
+        todo.description = request.form.get('description') or todo.description
+        todo.priority = request.form.get('priority') or todo.priority
+        todo.completed = request.form.get('completed') or todo.completed
+        todo.assigneeId = request.form.get('assigneeId') or todo.assigneeId
 
         db.session.commit()
 
-        return buildOkResponse(_returnTodo(todo))
+        return response_util.buildOkResponse(todo.toDict())
 
     def get(self, todoId):
         """Method gets and returns a single todo in an OK response.
+
+        Args:
+            todoId - Interger, primary key identifying the todo.
         """
         todo = Todo.query.get(todoId)
-        return buildOkResponse(_returnTodo(todo))
+        if todo is None:
+            raise status.NotFound()
+        return response_util.buildOkResponse(todo.toDict())
 
     def delete(self, todoId):
         """Method deletes a todo and returns result none.
+
+        Args:
+            todoId - Interger, primary key identifying the todo.
         """
         todo = Todo.query.get(todoId)
+        if todo is None:
+            raise status.NotFound()
         db.session.delete(todo)
         db.session.commit()
 
-        return buildOkResponse(None)
+        return response_util.buildOkResponse(None)
