@@ -122,11 +122,11 @@ class TestTodo_post(TestTodo):
             'dueDate': None,
             'description': 'Test Description',
             'priority': 3,
-            'completed': 0,  # why does this need to be 0 instead of False?
+            'completed': 0,
             'assigneeId': 1
         }
 
-        resp = self.client.post('/todos/', data=todo)
+        resp = self.client.post('/todos/?todolist=1', data=todo)
 
         assert resp.status_code == 200
         assert json.loads(resp.data) == {

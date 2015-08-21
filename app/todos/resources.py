@@ -1,31 +1,50 @@
-# Ask about getting branches up to date once committed
-
-import json
-
-from flask import request
+from flask import request, session
 from flask_restful import Resource
+from sqlalchemy import and_
 
-from app import db, Todo
-from app.lib import response_util, status
+from app import db, Todo, TodoListPermission
+from app.lib import authentication, response_util, status
 
 
 class TodoMultiResource(Resource):
     """Class for creating and accessing todos.
     """
-    def get(self):  # Should this take a user and return their todos?
+    @authentication.requiresAuth
+    def get(self):
         """Method gets a list of all the todos and returns them in an OK
         response.
         """
-        todos = Todo.query.all()
+        userId = session.get('userId')
+        todoListId = request.args.get('todoListId')
 
-        return response_util.buildOkResponse([todo.toDict() for todo in todos])
+
+        if filteredTodos is None:
+
+            todoLists = [permission.todoList for permission in
+                         TodoListPermission.query.filter_by(userId=userId)]
+            myTodos = []
+            for todoList in todoLists:
+                myTodos.extend(todoList.todos)
+
+            return response_util.buildOkResponse([todo.toDict() for todo in myTodos])
+        else:
+            todoListId = int(todoListId)  # bad request if not int
+            permissions = TodoListPermission.query.filter(
+                           and_(TodoListPermission.todoListId=todoListId,
+                                TodoListPermission.userId=userId))
+
+            if permissions == []:
+                raise status.Unauthorized() # change to new permission denied request
+
+            todos = Todos.query.filter_by(todoListId=todoListId)
+
+            return response_util.buildOkResponse([todo.toDict() for todo in todos])
 
     def post(self):
         """Method adds a new todo.
         """
         if not(request.form.get('subject') and request.form.get('todoListId')):
             raise status.BadRequest()
-
         todo = Todo(request.form.get('subject'),
                     request.form.get('todoListId'),
                     request.form.get('dueDate'),

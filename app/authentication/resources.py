@@ -40,6 +40,6 @@ class UserInfo(Resource):
     def get(self):
         """Method to get the user information of the user logged in.
         """
-        userId = session['userId']
+        userId = session.get('userId')
         user = User.query.get(userId)
         return response_util.buildOkResponse(user.toDict())
