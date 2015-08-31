@@ -1,6 +1,6 @@
 import json
 
-from app import db, TodoList, User
+from app import db, TodoList, TodoListPermission, User
 from unittest import ResourceTest
 
 
@@ -27,6 +27,11 @@ class TestTodoList_get(TestTodoList):
         todoList = TodoList('Test List', self.user.id)
         db.session.add(todoList)
         db.session.commit()
+
+        permission = TodoListPermission(1, 1)
+        db.session.add(permission)
+        db.session.commit()
+
         resp = self.client.get('/todolists/%s' % todoList.id)
 
         assert resp.status_code == 200
@@ -70,6 +75,10 @@ class TestTodoList_get(TestTodoList):
         db.session.add(todoList)
         db.session.commit()
 
+        permission = TodoListPermission(1, 1)
+        db.session.add(permission)
+        db.session.commit()
+
         resp = self.client.get('/todolists/%s' % todoList.id)
 
         assert resp.status_code == 401
@@ -92,6 +101,12 @@ class TestTodoList_get(TestTodoList):
         todoList2 = TodoList('Test2 List', self.user.id)
         db.session.add(todoList1)
         db.session.add(todoList2)
+        db.session.commit()
+
+        permission1 = TodoListPermission(1, 1)
+        permission2 = TodoListPermission(1, 2)
+        db.session.add(permission1)
+        db.session.add(permission2)
         db.session.commit()
 
         resp = self.client.get('/todolists/')
@@ -181,6 +196,10 @@ class TestTodoList_put(TestTodoList):
         db.session.add(todoList)
         db.session.commit()
 
+        permission = TodoListPermission(1, 1)
+        db.session.add(permission)
+        db.session.commit()
+
         newListData = {
             'name': 'Updated List'
         }
@@ -228,6 +247,10 @@ class TestTodoList_put(TestTodoList):
         db.session.add(todoList)
         db.session.commit()
 
+        permission = TodoListPermission(1, 1)
+        db.session.add(permission)
+        db.session.commit()
+
         newListData = {
             'name': 'Updated List'
         }
@@ -256,6 +279,10 @@ class TestTodoList_delete(TestTodoList):
 
         todoList = TodoList('Test List', self.user.id)
         db.session.add(todoList)
+        db.session.commit()
+
+        permission = TodoListPermission(1, 1)
+        db.session.add(permission)
         db.session.commit()
 
         resp = self.client.delete('/todolists/%s' % todoList.id)
@@ -295,6 +322,10 @@ class TestTodoList_delete(TestTodoList):
         """
         todoList = TodoList('Test List', 1)
         db.session.add(todoList)
+        db.session.commit()
+
+        permission = TodoListPermission(1, 1)
+        db.session.add(permission)
         db.session.commit()
 
         resp = self.client.delete('/todolists/%s' % todoList.id)

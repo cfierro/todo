@@ -1,5 +1,6 @@
 from flask import request, session
 from flask_restful import Resource
+from sqlalchemy import and_
 
 from app import db, TodoList, TodoListPermission
 from app.lib import authentication, response_util, status
@@ -14,7 +15,13 @@ class TodoListMultiResource(Resource):
         an Ok response.
         """
         userId = session.get('userId')
-        todoLists = TodoList.query.filter_by(creatorId=userId)
+        permissions = TodoListPermission.query.filter_by(userId=userId)
+        todoListIds = [permission.todoListId for permission in permissions]
+
+        if not todoListIds:
+            return response_util.buildOkResponse([])
+
+        todoLists = TodoList.query.filter(TodoList.id.in_(todoListIds))
 
         return response_util.buildOkResponse([todoList.toDict()
                                               for todoList in todoLists])
@@ -47,11 +54,20 @@ class TodoListResource(Resource):
         Args:
             listId - An integer, primary key that identifies the todo list.
         """
+        userId = session.get('userId')
         todoList = TodoList.query.get(todoListId)
+        permission = TodoList.query.filter()
+
+        TodoListPermission.query.filter_by(userId=userId)
 
         if todoList is None:
             raise status.NotFound()
-        if todoList.creatorId != session.get('userId'):
+
+        permission = TodoListPermission.query.filter(
+                           and_(TodoListPermission.todoListId == todoList.id,
+                                TodoListPermission.userId == userId)).first()
+
+        if permission is None:
             raise status.Unauthorized()
 
         todoList.name = request.form.get('name') or todoList.name
@@ -66,11 +82,17 @@ class TodoListResource(Resource):
         Args:
             todoListId - An integer, primary key that identifies the todo list.
         """
+        userId = session.get('userId')
         todoList = TodoList.query.get(todoListId)
 
         if todoList is None:
             raise status.NotFound()
-        if todoList.creatorId != session.get('userId'):
+
+        permission = TodoListPermission.query.filter(
+                           and_(TodoListPermission.todoListId == todoList.id,
+                                TodoListPermission.userId == userId)).first()
+
+        if permission is None:
             raise status.Unauthorized()
 
         return response_util.buildOkResponse(todoList.toDict())
@@ -82,11 +104,17 @@ class TodoListResource(Resource):
         Args:
             todoListId - An integer, primary key that identifies the todo list.
         """
+        userId = session.get('userId')
         todoList = TodoList.query.get(todoListId)
 
         if todoList is None:
             raise status.NotFound()
-        if todoList.creatorId != session.get('userId'):
+
+        permission = TodoListPermission.query.filter(
+                           and_(TodoListPermission.todoListId == todoList.id,
+                                TodoListPermission.userId == userId)).first()
+
+        if permission is None:
             raise status.Unauthorized()
 
         db.session.delete(todoList)

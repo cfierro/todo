@@ -9,6 +9,7 @@ class Todo(TableMixin, Base):
 
     subject = db.Column(db.String)
     todoListId = db.Column(db.Integer, db.ForeignKey('todo_list.id'))
+    creatorId = db.Column(db.Integer)
     dueDate = db.Column(db.DateTime)
     description = db.Column(db.Text)
     priority = db.Column(db.Integer)
@@ -18,10 +19,11 @@ class Todo(TableMixin, Base):
     assignee = db.relationship('User', backref=db.backref('assignedTodos'))
     todoList = db.relationship('TodoList', backref=db.backref('todos'))
 
-    def __init__(self, subject, todoListId, dueDate=None, description="",
+    def __init__(self, subject, todoListId, creatorId, dueDate=None, description="",
                  priority=3, completed=False, assigneeId=None):
         self.subject = subject
         self.todoListId = todoListId
+        self.creatorId = creatorId
         self.dueDate = dueDate
         self.description = description
         self.priority = priority
@@ -31,13 +33,17 @@ class Todo(TableMixin, Base):
     def toDict(self):
         """Method to convert a todo object into a dictionary.
         """
+        assigneeName = self.assignee.name if self.assigneeId else None
+
         return {
                 'id': self.id,
                 'subject': self.subject,
+                'todoListId': self.todoListId,
+                'creatorId': self.creatorId,
                 'dueDate': self.dueDate,
                 'description': self.description,
                 'priority': self.priority,
                 'completed': self.completed,
-                'assignee': self.assignee.name,
+                'assignee': assigneeName,
                 'list': self.todoList.name
             }
