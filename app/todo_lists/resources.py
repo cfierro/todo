@@ -56,16 +56,13 @@ class TodoListResource(Resource):
         """
         userId = session.get('userId')
         todoList = TodoList.query.get(todoListId)
-        permission = TodoList.query.filter()
-
-        TodoListPermission.query.filter_by(userId=userId)
 
         if todoList is None:
             raise status.NotFound()
 
         permission = TodoListPermission.query.filter(
-                           and_(TodoListPermission.todoListId == todoList.id,
-                                TodoListPermission.userId == userId)).first()
+                        and_(TodoListPermission.todoListId == todoList.id,
+                             TodoListPermission.userId == userId)).first()
 
         if permission is None:
             raise status.Unauthorized()
@@ -89,8 +86,8 @@ class TodoListResource(Resource):
             raise status.NotFound()
 
         permission = TodoListPermission.query.filter(
-                           and_(TodoListPermission.todoListId == todoList.id,
-                                TodoListPermission.userId == userId)).first()
+                        and_(TodoListPermission.todoListId == todoList.id,
+                             TodoListPermission.userId == userId)).first()
 
         if permission is None:
             raise status.Unauthorized()
@@ -111,8 +108,8 @@ class TodoListResource(Resource):
             raise status.NotFound()
 
         permission = TodoListPermission.query.filter(
-                           and_(TodoListPermission.todoListId == todoList.id,
-                                TodoListPermission.userId == userId)).first()
+                        and_(TodoListPermission.todoListId == todoList.id,
+                             TodoListPermission.userId == userId)).first()
 
         if permission is None:
             raise status.Unauthorized()

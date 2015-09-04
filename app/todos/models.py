@@ -36,14 +36,14 @@ class Todo(TableMixin, Base):
         assigneeName = self.assignee.name if self.assigneeId else None
 
         return {
-                'id': self.id,
-                'subject': self.subject,
-                'todoListId': self.todoListId,
-                'creatorId': self.creatorId,
-                'dueDate': self.dueDate,
-                'description': self.description,
-                'priority': self.priority,
-                'completed': self.completed,
-                'assignee': assigneeName,
-                'list': self.todoList.name
-            }
+            'id': self.id,
+            'subject': self.subject,
+            'todoListId': self.todoListId,
+            'creatorId': self.creatorId,
+            'dueDate': self.dueDate,
+            'description': self.description,
+            'priority': self.priority,
+            'completed': self.completed,
+            'assignee': assigneeName,
+            'list': self.todoList.name
+        }

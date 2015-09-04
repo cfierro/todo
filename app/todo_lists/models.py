@@ -1,7 +1,6 @@
 from app import db, Base
 
 from app.lib.models import TableMixin
-from app.permissions.models import TodoListPermission
 
 
 class TodoList(TableMixin, Base):
@@ -16,8 +15,6 @@ class TodoList(TableMixin, Base):
     def __init__(self, name, creatorId):
         self.name = name
         self.creatorId = creatorId
-
-        # TodoListPermission(self.creatorId, self.id)
 
     def toDict(self):
         """Method to convert a todoList object into a dictionary.

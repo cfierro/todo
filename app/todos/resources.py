@@ -12,14 +12,14 @@ class TodoMultiResource(Resource):
     @authentication.requiresAuth
     def get(self):
         """Method gets a list of all the todos and returns them in an OK
-        response.
+        response. The API can be filtered by todoListId to return a list of
+        todos in the specified todoList.
         """
         userId = session.get('userId')
-        permissions = TodoListPermission.query.filter_by(userId=userId)
         todoListId = request.args.get('todoListId')
 
         if todoListId is None:
-
+            permissions = TodoListPermission.query.filter_by(userId=userId)
             todoListIds = [permission.todoListId for permission in permissions]
             if not todoListIds:
                 return response_util.buildOkResponse([])
@@ -42,12 +42,12 @@ class TodoMultiResource(Resource):
 
     @authentication.requiresAuth
     def post(self):
-        """Method adds a new todo.
+        """Method adds a new todo and returns the todo in an OK response..
         """
         userId = session.get('userId')
         todoListId = request.form.get('todoListId')
 
-        if not(request.form.get('subject') and request.form.get('todoListId')):
+        if not(request.form.get('subject') and todoListId):
             raise status.BadRequest()
 
         permission = TodoListPermission.query.filter(
@@ -58,7 +58,7 @@ class TodoMultiResource(Resource):
             raise status.Forbidden()
 
         todo = Todo(request.form.get('subject'),
-                    request.form.get('todoListId'),
+                    todoListId,
                     userId,
                     request.form.get('dueDate'),
                     request.form.get('description'),
@@ -72,11 +72,11 @@ class TodoMultiResource(Resource):
 
 
 class TodoResource(Resource):
-    """Class for updating, delelting, getting single todo.
+    """Class for updating, deleting, getting a single todo.
     """
     @authentication.requiresAuth
     def put(self, todoId):
-        """Method updates a todo information and returns todo in an OK response.
+        """Method updates a todo instance and returns it todo in an OK response.
 
         Args:
             todoId - Interger, primary key identifying the todo.

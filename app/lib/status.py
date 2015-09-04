@@ -35,7 +35,7 @@ class BadRequest(TodoException):
 
 
 class Unauthorized(TodoException):
-    """Exception where unauthorized request is made.
+    """Exception raised when an unauthorized request is made.
     """
     statusCode = 401
 
@@ -46,7 +46,7 @@ class Unauthorized(TodoException):
 
 
 class Forbidden(TodoException):
-    """Exception where permission is denied.
+    """Exception raised when permission is denied.
     """
     statusCode = 403
 
@@ -65,6 +65,3 @@ class NotFound(TodoException):
                  info=None):
         super(NotFound, self).__init__(message, details=details, result=result,
                                        info=info)
-
-
-

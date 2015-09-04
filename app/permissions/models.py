@@ -4,12 +4,6 @@ from app.lib.models import TableMixin
 
 
 class TodoListPermission(TableMixin, Base):
-    """Constructor.
-
-    Args:
-        userId - ID of user allowed to view the given todo list.
-        todoListId - ID of todo list being granted access to.
-    """
     __tablename__ = 'todo_list_permission'
 
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -19,5 +13,11 @@ class TodoListPermission(TableMixin, Base):
     todoList = db.relationship('TodoList')
 
     def __init__(self, userId, todoListId):
+        """Constructor.
+
+        Args:
+            userId - ID of user allowed to view the given todo list.
+            todoListId - ID of todo list being granted access to.
+        """
         self.userId = userId
         self.todoListId = todoListId
