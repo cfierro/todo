@@ -34,6 +34,28 @@ class BadRequest(TodoException):
                                          result=result, info=info)
 
 
+class Unauthorized(TodoException):
+    """Exception raised when an unauthorized request is made.
+    """
+    statusCode = 401
+
+    def __init__(self, message="Unauthorized request", details=None,
+                 result=None, info=None):
+        super(Unauthorized, self).__init__(message, details=None, result=None,
+                                           info=None)
+
+
+class Forbidden(TodoException):
+    """Exception raised when permission is denied.
+    """
+    statusCode = 403
+
+    def __init__(self, message="Forbidden", details=None,
+                 result=None, info=None):
+        super(Unauthorized, self).__init__(message, details=None, result=None,
+                                           info=None)
+
+
 class NotFound(TodoException):
     """Exception raised when a resource does not exist.
     """
@@ -43,13 +65,3 @@ class NotFound(TodoException):
                  info=None):
         super(NotFound, self).__init__(message, details=details, result=result,
                                        info=info)
-
-class Unauthorized(TodoException):
-    """Exception where unauthorized request is made.
-    """
-    statusCode = 401
-
-    def __init__(self, message="Unauthorized request", details=None,
-                 result=None, info=None):
-        super(Unauthorized, self).__init__(message, details=None, result=None, info=None)
-

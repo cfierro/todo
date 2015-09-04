@@ -18,7 +18,8 @@ class UserListResource(Resource):
     def post(self):
         """This method adds a new user and returns the user in an OK response.
         """
-        if not (request.form.get('name') and request.form.get('email') and
+
+        if not(request.form.get('name') and request.form.get('email') and
                 request.form.get('password')):
             raise status.BadRequest()
 

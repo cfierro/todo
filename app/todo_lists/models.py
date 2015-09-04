@@ -1,14 +1,26 @@
-from app import db
+from app import db, Base
+
+from app.lib.models import TableMixin
 
 
-class TodoList(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class TodoList(TableMixin, Base):
+
+    __tablename__ = 'todo_list'
+
     name = db.Column(db.String)
-    userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    user = db.relationship('User',
-        backref=db.backref('lists', lazy='dynamic'))
+    creatorId = db.Column(db.Integer, db.ForeignKey('user.id'))
+    creator = db.relationship(
+        'User', backref=db.backref('lists'))
 
-    def __init__(self, name, userId, id=None):
-        self.id = id
+    def __init__(self, name, creatorId):
         self.name = name
-        self.userId = userId
+        self.creatorId = creatorId
+
+    def toDict(self):
+        """Method to convert a todoList object into a dictionary.
+        """
+        return {
+            'id': self.id,
+            'name': self.name,
+            'creator': self.creator.name
+        }

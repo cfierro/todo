@@ -24,12 +24,15 @@ def handleBaseException(error):
 
 # Define database object which is imported by models and controllers.
 db = SQLAlchemy(app)
+Base = db.make_declarative_base()
 
 # Import all models here for easier importing.
 from app.users.models import User
 from app.todo_lists.models import TodoList
 from app.todos.models import Todo
+from app.permissions.models import TodoListPermission
 
+db.drop_all()
 db.create_all()
 
 ### Setup API endpoints ###
@@ -44,8 +47,20 @@ from app.users.resources import UserListResource, UserResource
 api.add_resource(UserListResource, '/users', '/users/')
 api.add_resource(UserResource, '/users/<int:userId>', '/users/<int:userId>/')
 
+# Todo API
+from app.todos.resources import TodoMultiResource, TodoResource
+api.add_resource(TodoMultiResource, '/todos', '/todos/')
+api.add_resource(TodoResource, '/todos/<int:todoId>', '/todos/<int:todoId>/')
+
+# TodoList API
+from app.todo_lists.resources import TodoListMultiResource, TodoListResource
+api.add_resource(TodoListMultiResource, '/todolists', '/todolists/')
+api.add_resource(TodoListResource, '/todolists/<int:todoListId>',
+                 '/todolists/<int:todoListId>/')
+
 # Authentication API
 from app.authentication.resources import UserLogin, UserLogOut, UserInfo
 api.add_resource(UserLogin, '/login/<int:userId>', '/login/<int:userId>/')
 api.add_resource(UserLogOut, '/logout', '/logout/')
 api.add_resource(UserInfo, '/me', '/me/')
+
