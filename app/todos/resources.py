@@ -30,7 +30,7 @@ class TodoMultiResource(Resource):
         else:
             todoListId = int(todoListId)  # bad request if not int
             permissions = TodoListPermission.query.filter(
-                           and_(TodoListPermission.todoListId == todoListId,
+                            and_(TodoListPermission.todoListId == todoListId,
                                 TodoListPermission.userId == userId)).all()
 
             if not permissions:
@@ -51,8 +51,8 @@ class TodoMultiResource(Resource):
             raise status.BadRequest()
 
         permission = TodoListPermission.query.filter(
-                           and_(TodoListPermission.todoListId == todoListId,
-                                TodoListPermission.userId == userId)).first()
+                        and_(TodoListPermission.todoListId == todoListId,
+                             TodoListPermission.userId == userId)).first()
 
         if permission is None:
             raise status.Forbidden()
@@ -88,8 +88,8 @@ class TodoResource(Resource):
             raise status.NotFound()
 
         permission = TodoListPermission.query.filter(
-                           and_(TodoListPermission.todoListId == todo.todoListId,
-                                TodoListPermission.userId == userId)).first()
+                        and_(TodoListPermission.todoListId == todo.todoListId,
+                             TodoListPermission.userId == userId)).first()
 
         if permission is None:
             raise status.Forbidden()
@@ -119,8 +119,8 @@ class TodoResource(Resource):
             raise status.NotFound()
 
         permission = TodoListPermission.query.filter(
-                           and_(TodoListPermission.todoListId == todo.todoListId,
-                                TodoListPermission.userId == userId)).first()
+                        and_(TodoListPermission.todoListId == todo.todoListId,
+                             TodoListPermission.userId == userId)).first()
 
         if permission is None:
             raise status.Forbidden()
@@ -141,8 +141,8 @@ class TodoResource(Resource):
             raise status.NotFound()
 
         permission = TodoListPermission.query.filter(
-                           and_(TodoListPermission.todoListId == todo.todoListId,
-                                TodoListPermission.userId == userId)).first()
+                        and_(TodoListPermission.todoListId == todo.todoListId,
+                             TodoListPermission.userId == userId)).first()
 
         if permission is None:
             raise status.Forbidden()
