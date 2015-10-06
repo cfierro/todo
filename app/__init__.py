@@ -32,7 +32,6 @@ from app.todo_lists.models import TodoList
 from app.todos.models import Todo
 from app.permissions.models import TodoListPermission
 
-db.drop_all()
 db.create_all()
 
 ### Setup API endpoints ###
