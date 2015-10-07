@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_restful import Api
 
@@ -63,3 +63,6 @@ api.add_resource(UserLogin, '/login/<int:userId>', '/login/<int:userId>/')
 api.add_resource(UserLogOut, '/logout', '/logout/')
 api.add_resource(UserInfo, '/me', '/me/')
 
+@app.route('/')
+def index():
+    return render_template('index.html')
